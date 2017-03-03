@@ -1,5 +1,7 @@
 """This file should have our order classes in it."""
-from random import randint 
+from random import randint
+from datetime import datetime, day
+
 
 class AbstractMelonOrder(object):
     """Parent class for melon orders."""
@@ -11,16 +13,27 @@ class AbstractMelonOrder(object):
         self.species = species
         self.qty = qty
 
+
     def get_base_price(self):
+
         splurge_base_price = randint(5,9)
-        return splurge_base_price
+        
+        total_prices = splurge_base_price
+
+        if datetime.hour >= 8 and datetime.hour <= 11 and 
+        date.day >= 0 and date.day <= 4:
+            total_prices += 4
+
+        return total_prices
+
 
     def get_total(self):
         """Calculate price."""
 
         base_price = self.get_base_price()
+        
         if self.species == "Christmas":
-            self.base_price *= 1.5
+            base_price *= 1.5
         
         total = (1 + self.tax) * self.qty * base_price
         return total
