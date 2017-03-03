@@ -1,16 +1,14 @@
 """This file should have our order classes in it."""
 
 class AbstractMelonOrder(object):
-    """Parent class for melon orders.
-    """
+    """Parent class for melon orders."""
 
-    def __init__(self, species, qty, order_type, tax, country_code = None):
+    shipped = False
+
+
+    def __init__(self, species, qty):
         self.species = species
         self.qty = qty
-        self.shipped = False
-        self.order_type = order_type
-        self.tax = tax
-        self.country_code = country_code
 
 
     def get_total(self):
@@ -34,25 +32,23 @@ class AbstractMelonOrder(object):
 class DomesticMelonOrder(AbstractMelonOrder):
     """A domestic (in the US) melon order."""
 
-    def __init__(self, species, qty):
-        """Initialize melon order attributes"""
-
-        super(DomesticMelonOrder, self).__init__(species, 
-            qty, "domestic", 0.08)
+    tax = 0.08
+    order_type = "domestic"
 
 
 
 class InternationalMelonOrder(AbstractMelonOrder):
     """An international (non-US) melon order."""
 
-    def __init__(self, species, qty, country_code):
-        """Initialize melon order attributes"""
+    tax = 0.17
+    order_type = "international"
 
-        super(InternationalMelonOrder, self).__init__(species, 
-            qty, "international", 0.17, country_code)
+    def __init__(self, country_code):
+        self.country_code = country_code
 
     def get_total(self):
-        get_total_international = super(InternationalMelonOrder, self).get_total()
+        get_total_international = super(InternationalMelonOrder,
+            self).get_total()
 
         if self.qty < 10:
             get_total_international += 3
@@ -63,3 +59,13 @@ class InternationalMelonOrder(AbstractMelonOrder):
         """Return the country code."""
 
         return self.country_code
+
+
+class GovernmentMelonOrder(AbstractMelonOrder):
+
+    tax = 0
+    passed_inspection = False
+
+    def mark_inspection(self, passed):
+        if passed:
+            self.passed_inspection = True
